@@ -1,0 +1,57 @@
+version: '3'
+
+volumes:
+  pgsql_data: { }
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: overlay
+    attachable: true
+
+services:
+  postgresql:
+    image: postgres:17.5-alpine3.22
+    container_name: question_postgresql
+    restart: always
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_DB: $POSTGRES_DATABASE
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - pgsql_data:/var/lib/postgresql
+    networks:
+      - backend
+  backend:
+    container_name: question_backend
+    environment:
+      - DATABASE_HOST=postgresql
+      - DATABASE_USER=$POSTGRES_USER
+      - DATABASE_PASSWORD=$POSTGRES_PASSWORD
+      - DATABASE_NAME=$POSTGRES_DATABASE
+      - DATABASE_PORT=5432
+    depends_on:
+      - postgresql
+    ports:
+      - "$BACKEND_LOCAL_PORT:$BACKEND_DOCKER_PORT"
+    restart: always
+    build: ./backend_image
+    networks:
+      - backend
+      - frontend
+    command:
+      - ./run_app.sh
+  frontend:
+    container_name: question_frontend
+    environment:
+      - PORT=$FRONTEND_DOCKER_PORT
+      - API_BASE_URL=http://backend:$BACKEND_DOCKER_PORT
+    depends_on:
+      - backend
+    ports:
+      - "$FRONTEND_LOCAL_PORT:$FRONTEND_DOCKER_PORT"
+    restart: always
+    build: ./frontend_image
+    networks:
+      - frontend
