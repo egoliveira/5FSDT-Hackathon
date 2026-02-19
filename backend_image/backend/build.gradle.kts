@@ -28,7 +28,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.flywaydb:flyway-database-postgresql")
-    implementation("com.itextpdf:itextpdf:5.5.13.5")
+    implementation("com.itextpdf:itext-core:9.5.0")
+    implementation("com.itextpdf:kernel:9.5.0")
+    implementation("com.itextpdf:bouncy-castle-adapter:9.5.0")
 
     runtimeOnly("org.postgresql:postgresql")
 

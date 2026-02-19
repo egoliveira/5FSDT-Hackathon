@@ -1,6 +1,6 @@
 package com.question.backend.data.repository
 
-import com.itextpdf.text.pdf.PdfWriter
+import com.itextpdf.layout.element.AreaBreak
 import com.question.backend.data.dao.ExamDAO
 import com.question.backend.data.dao.ExamQuestionEntityDAO
 import com.question.backend.data.helper.PDFHelper
@@ -73,11 +73,7 @@ class ExamRepositoryImpl(
 
         val baos = ByteArrayOutputStream()
 
-        val document = pdfHelper.createDocument(pageSize)
-
-        PdfWriter.getInstance(document, baos)
-
-        document.open()
+        val document = pdfHelper.createDocument(pageSize, baos)
 
         questionOrders.forEachIndexed { examCopyIndex, order ->
             pdfHelper.run {
@@ -94,13 +90,13 @@ class ExamRepositoryImpl(
                 }
 
                 if (examCopyIndex < questionOrders.size - 1) {
-                    document.newPage()
+                    document.add(AreaBreak())
                 }
             }
         }
 
         pdfHelper.run {
-            document.newPage()
+            document.add(AreaBreak())
             writeExamAnswersTitle(document, exam)
             writeEmptyLine(document)
             writeExamTeachingLevelGradeAndClass(document, exam)
