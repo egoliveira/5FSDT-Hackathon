@@ -1,5 +1,6 @@
 package com.question.backend.data.helper
 
+import com.itextpdf.kernel.font.PdfFont
 import com.itextpdf.kernel.font.PdfFontFactory
 import com.itextpdf.kernel.pdf.PdfDocument
 import com.itextpdf.kernel.pdf.PdfWriter
@@ -22,26 +23,29 @@ import java.util.*
 
 @Component
 class PDFHelper(@Autowired private val resourceLoader: ResourceLoader) {
-    private val notoSansFont by lazy {
-        PdfFontFactory.createFont(
-            getFontContent("classpath:font/NotoSans-Regular.ttf"),
-            PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-        )
-    }
+    private val notoSansFont: PdfFont
+        get() {
+            return PdfFontFactory.createFont(
+                getFontContent("classpath:font/NotoSans-Regular.ttf"),
+                PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+            )
+        }
 
-    private val notoSansBoldFont by lazy {
-        PdfFontFactory.createFont(
-            getFontContent("classpath:font/NotoSans-Bold.ttf"),
-            PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-        )
-    }
+    private val notoSansBoldFont: PdfFont
+        get() {
+            return PdfFontFactory.createFont(
+                getFontContent("classpath:font/NotoSans-Bold.ttf"),
+                PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+            )
+        }
 
-    private val notoSansItalicFont by lazy {
-        PdfFontFactory.createFont(
-            getFontContent("classpath:font/NotoSans-Italic.ttf"),
-            PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-        )
-    }
+    private val notoSansItalicFont: PdfFont
+        get() {
+            return PdfFontFactory.createFont(
+                getFontContent("classpath:font/NotoSans-Italic.ttf"),
+                PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
+            )
+        }
 
     fun createDocument(pageSize: PageSize, outputStream: OutputStream): Document {
         val pdfDoc = PdfDocument(PdfWriter(outputStream)).apply {
